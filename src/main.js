@@ -4,20 +4,18 @@ const fs = require('fs')
 function calculateBlocks(data) {
   const blockSize = 1024
   const blocks = Math.ceil(data.length / blockSize)
-
   const blocksArray = []
-
-  let newIndex = 0
+  let currentBlocksSize = 0
   let j = 0
 
   for (let i = 0; i < blocks; i++) {
     let block = []
     for (j = 0; j < blockSize; j++) {
-      if (data[newIndex + j] !== undefined) {
-        block.push(data[newIndex + j])
+      if (data[currentBlocksSize + j] !== undefined) {
+        block.push(data[currentBlocksSize + j])
       }
     }
-    newIndex = newIndex + j
+    currentBlocksSize += j
     blocksArray.push(block)
   }
 
@@ -25,13 +23,14 @@ function calculateBlocks(data) {
 }
 
 function calculateHash(block) {
-  const buffer = Buffer.from(block)
-  const hash = crypto.createHash('sha256').update(buffer)
+  // The "data" argument must be of type string or an instance of Buffer or Uint8Array
+  const bufferedBlock = new Uint8Array(block)
+  const hash = crypto.createHash('sha256').update(bufferedBlock)
 
   return hash
 }
 
-function calculateHashes(blocks) {
+function calculateH0(blocks) {
   const reversedBlocks = blocks.reverse()
 
   const hashBlocks = []
@@ -39,22 +38,29 @@ function calculateHashes(blocks) {
   hashBlocks.push(calculateHash(reversedBlocks[0]))
 
   for (let i = 1; i < reversedBlocks.length; i++) {
-    const nextBuffer = Buffer.from(reversedBlocks[i])
-    const nextBlock = Buffer.concat([nextBuffer, hashBlocks[i - 1].digest()])
+    const bufferedBlock = new Uint8Array(reversedBlocks[i])
+    const nextBlock = Int8Array.from([
+      ...bufferedBlock,
+      ...hashBlocks[i - 1].digest(),
+    ])
 
     hashBlocks.push(calculateHash(nextBlock))
   }
 
-  return hashBlocks[hashBlocks.length - 1].digest('hex')
+  const H0 = hashBlocks[hashBlocks.length - 1].digest('hex')
+  return H0
 }
 
 function run() {
   try {
-    const data = fs.readFileSync('./src/videos/FuncoesResumo - SHA1.mp4')
-
+    const args = process.argv.slice(2)
+    const fileName = args[0] || 'FuncoesResumo-SHA1.mp4'
+    const data = fs.readFileSync(`./src/videos/${fileName}`)
     const blocks = calculateBlocks(data)
 
-    console.log(calculateHashes(blocks))
+    console.log('T2 - SHA256')
+    console.log('Guilherme Rizzotto')
+    console.log(`H0: ${calculateH0(blocks)}`)
   } catch (err) {
     console.error(err)
   }
