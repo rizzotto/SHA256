@@ -16,5 +16,5 @@ and then
 
 `npm start`
 
-The default file that will be used by the code is `FuncoesResumo-SHA1.mp4`. If you want to test another file, just pass as the first argument of the script, for example:
+First, import the file to the `videos` folder, the default file that will be used by the code is `FuncoesResumo-SHA1.mp4`. If you want to test another file, just pass as the first argument of the script, for example:
 - `npm start FuncoesResumo-HashFunctions.mp4`
