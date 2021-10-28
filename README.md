@@ -1,5 +1,9 @@
 # SHA256
 Simple program that calculates the H0 hash of a file that was divided in blocks of 1024 bytes.
+
+## Video
+[Code overview](https://drive.google.com/file/d/1ItXFDsU2pVA7f2oVPs0GFYk2CesByd9x/view?usp=sharing)
+
 ## Requirements
 - `Node.js`
 ## How to run
